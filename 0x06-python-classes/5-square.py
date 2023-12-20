@@ -35,3 +35,10 @@ class Square:
             size squase.
         """
         return self.__size ** 2
+
+    def my_print(self):
+        """print square."""
+        for x in range(self.size):
+            for y in range(self.size):
+                print("#", end="\n" if y is self.size - 1 and x != y else "")
+        print()
