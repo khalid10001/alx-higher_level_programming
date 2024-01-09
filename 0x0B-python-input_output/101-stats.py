@@ -1,40 +1,44 @@
 #!/usr/bin/python3
-"""
-reads stdin line by line and computes metrics
-"""
 import sys
 
-file_size = 0
-status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
-i = 0
+# Initialize variables
+total_size = 0
+status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+line_count = 0
+
+# Define a function to print the statistics
+
+
+def print_stats():
+    global total_size, status_codes
+    print("File size: {}".format(total_size))
+    for code, count in sorted(status_codes.items()):
+        if count > 0:
+            print("{}: {}".format(code, count))
+
+# Loop through the lines of stdin
+
+
 try:
     for line in sys.stdin:
+        # Split the line by spaces
         tokens = line.split()
-        if len(tokens) >= 2:
-            a = i
-            if tokens[-2] in status_tally:
-                status_tally[tokens[-2]] += 1
-                i += 1
-            try:
-                file_size += int(tokens[-1])
-                if a == i:
-                    i += 1
-            except FileNotFoundError:
-                if a == i:
-                    continue
-        if i % 10 == 0:
-            print("File size: {:d}".format(file_size))
-            for key, value in sorted(status_tally.items()):
-                if value:
-                    print("{:s}: {:d}".format(key, value))
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
-
+        # Check if the line has the expected format
+        if len(tokens) > 2 and tokens[-2].isdigit() and tokens[-1].isdigit():
+            # Update the total file size
+            total_size += int(tokens[-1])
+            # Update the status code count
+            status_code = int(tokens[-2])
+            if status_code in status_codes:
+                status_codes[status_code] += 1
+        # Increment the line count
+        line_count += 1
+        # Print the statistics every 10 lines
+        if line_count % 10 == 0:
+            print_stats()
+    # Print the statistics at the end
+    print_stats()
 except KeyboardInterrupt:
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
+    # Print the statistics after a keyboard interruption
+    print_stats()
+    raise
