@@ -1,1 +1,1 @@
-javascript objects scopes closures
+0x13. JavaScript - Objects, Scopes and Closures

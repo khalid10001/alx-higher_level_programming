@@ -1,8 +1,5 @@
 #!/usr/bin/node
-/**
- * Represents parallelogram with 4 right angles.
- */
 class Rectangle {
-
 }
+
 module.exports = Rectangle;
